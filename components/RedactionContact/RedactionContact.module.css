@@ -2,3 +2,7 @@
   border: 2px solid rgb(198, 27, 27);
   flex: 1;
 }
+.redaction-contact-div input {
+  border: 2px solid rgb(27, 198, 155);
+  margin: 4px;
+}

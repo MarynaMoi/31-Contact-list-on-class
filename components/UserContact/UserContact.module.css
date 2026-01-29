@@ -4,5 +4,13 @@
     padding: 4px;
 }
 .user-contact div{
-    padding: 0
+    padding: 0;
+    display: flex;
+    justify-content: space-between;
+
+}
+ 
+span{
+    padding: 0 4px ; 
+    border: 2px solid black;
 }
