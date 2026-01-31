@@ -3,11 +3,20 @@ import styles from "./UserContact.module.css";
 class UserContact extends Component {
   render() {
     const { id, lastName, firstName } = this.props.userContact;
-    const selectedContact = this.props.selectedContact;
+    const { selectedContact, deleteContact } = this.props;
     return (
       <div className={styles["user-contact"]}>
         <div onClick={() => selectedContact(id)}>
-          {firstName} {lastName} <span>X</span>
+          {firstName} {lastName}
+          <span
+            className={styles.deleteX}
+            onClick={(ev) => {
+              ev.stopPropagation();
+              deleteContact(id);
+            }}
+          >
+            X
+          </span>
         </div>
       </div>
     );

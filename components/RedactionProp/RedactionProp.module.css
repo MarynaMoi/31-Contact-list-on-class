@@ -1,0 +1,13 @@
+.inputWrapper {
+display: flex;
+align-items: center;
+/* gap: 8px; */
+  border: 2px solid rgb(108, 226, 195);
+  margin: 10px 0;
+  padding: 0;
+}
+
+
+.clearX:hover {
+  opacity: 1;
+}

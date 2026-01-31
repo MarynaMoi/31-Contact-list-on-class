@@ -12,46 +12,41 @@ class App extends Component {
   state = {
     userContact: userData,
     selectedContactId: null,
-    // nemoUser: { id: null, firstName: "", lastName: "", email: "", phone: "" },
   };
 
   selectedContact = (id) => {
     this.setState({ selectedContactId: id });
-    // console.log("selectedContact");
   };
 
   startAddContact = () => {
     this.setState({ selectedContactId: null });
-    console.log("startAddContact");
   };
+  
 
   saveContact = (contact) => {
     if (!contact.id) {
-      // console.log("saveNewContact");
       const newContact = { ...contact, id: nanoid() };
       this.setState((prev) => ({
         userContact: [...prev.userContact, newContact],
-        selectedContactId: newContact.id,
+        selectedContactId: null,
       }));
+    
     } else {
-      // console.log("savePrevContact");
       this.setState((prev) => ({
-        userContact: prev.userContact.map((user) =>
-          user.id === contact.id ? contact : user,
+        userContact: prev.userContact.map((u) =>
+          u.id === contact.id ? contact : u,
         ),
+        selectedContactId: null,
       }));
     }
   };
 
-  deleteContact = () => {
-    this.setState({
-      userContact: [
-        ...this.state.userContact.filter(
-          (u) => u.id !== this.state.selectedContactId,
-        ),
-      ],
-      selectedContactId: null
-    });
+  deleteContact = (id) => {
+    this.setState((prev) => ({
+      userContact: prev.userContact.filter((u) => u.id !== id),
+      selectedContactId:
+        prev.selectedContactId === id ? null : prev.selectedContactId,
+    }));
   };
 
   render() {
@@ -61,12 +56,13 @@ class App extends Component {
     );
     return (
       <>
-        {/* <div className={styles["title"]}>Contact list</div> */}
+        <div className={styles["title"]}>Contact list</div>
         <div className={styles["list-and-redaction-div"]}>
           <AllContactList
             userContact={userContact}
             selectedContact={this.selectedContact}
             startAddContact={this.startAddContact}
+            deleteContact={this.deleteContact}
           />
           <RedactionContact
             userContact={selectedUser}

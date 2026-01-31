@@ -1,5 +1,5 @@
 import { Component } from "react";
-// import { nanoid } from "nanoid";
+import RedactionProp from "../RedactionProp/RedactionProp";
 import styles from "./RedactionContact.module.css";
 
 class RedactionContact extends Component {
@@ -12,80 +12,75 @@ class RedactionContact extends Component {
   };
 
   componentDidUpdate(prevProps) {
-    const { userContact, selectedContactId } = this.props;
-
-    console.log("componentDidUpdate", this.state);
-
-    console.log("selectedContactId", selectedContactId);
-    console.log("prevProps.selectedContactId", prevProps.selectedContactId);
-    console.log(
-      "prevProps.selectedContactId !== selectedContactId",
-      prevProps.selectedContactId !== selectedContactId,
-    );
-    if (prevProps.selectedContactId !== selectedContactId) {
-      if (selectedContactId === null) {
-        console.log("selectedContactId === null", selectedContactId === null);
-        this.setState({
-          firstName: "",
-          lastName: "",
-          email: "",
-          phone: "",
-          id: null,
-        });
-      } else if (userContact) {
-        console.log("userContact", userContact);
-        this.setState({ ...userContact });
-      }
+    const { selectedContactId, userContact } = this.props;
+    if (prevProps.selectedContactId === selectedContactId) return;
+    if (selectedContactId === null) {
+      this.resetForm();
+      return;
+    }
+    if (userContact) {
+      this.setState({ ...userContact });
     }
   }
+
+  resetForm = () => {
+    this.setState({
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      id: null,
+    });
+  };
 
   handleChange = (ev) => {
     const { name, value } = ev.target;
     this.setState({ [name]: value });
-    console.log("handleChange", this.state);
+  };
+
+  clearSelectInput = (fieldName) => {
+    this.setState({ [fieldName]: "" });
   };
 
   render() {
     const { firstName, lastName, email, phone } = this.state;
+    const { selectedContactId } = this.props;
 
     return (
       <>
         <form className={styles["redaction-contact-div"]}>
-          <input
+          <RedactionProp
             name="firstName"
             placeholder="First Name"
             value={firstName}
-            onChange={this.handleChange}
+            handleChange={this.handleChange}
+            onClearInput={this.clearSelectInput}
           />
-          <input
+
+          <RedactionProp
             name="lastName"
             placeholder="Last Name"
             value={lastName}
-            onChange={this.handleChange}
+            handleChange={this.handleChange}
+            onClearInput={this.clearSelectInput}
           />
-          <input
+
+          <RedactionProp
             name="email"
             placeholder="Email"
             value={email}
-            onChange={this.handleChange}
+            handleChange={this.handleChange}
+            onClearInput={this.clearSelectInput}
           />
-          <div className={styles.inputWrapper}>
-            <input
-              name="phone"
-              placeholder="Phone"
-              value={phone}
-              onChange={this.handleChange}
-            />
 
-            {phone && (
-              <span
-                className={styles.clearX}
-                onClick={() => this.setState({ phone: "" })}
-              >
-                ✕
-              </span>
-            )}
-          </div>
+          <RedactionProp
+            name="phone"
+            placeholder="Phone"
+            value={phone}
+            handleChange={this.handleChange}
+            onClearInput={this.clearSelectInput}
+          />
+
           <button
             type="button"
             onClick={() => this.props.saveContact(this.state)}
@@ -93,7 +88,10 @@ class RedactionContact extends Component {
             Save
           </button>
           {this.props.selectedContactId !== null && (
-            <button type="button" onClick={() => this.props.deleteContact()}>
+            <button
+              type="button"
+              onClick={() => this.props.deleteContact(selectedContactId)}
+            >
               Delete
             </button>
           )}
