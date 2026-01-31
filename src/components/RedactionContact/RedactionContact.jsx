@@ -12,14 +12,14 @@ class RedactionContact extends Component {
   };
 
   componentDidUpdate(prevProps) {
-    const { selectedContactId, userContact } = this.props;
+    const { selectedContactId, selectedUser } = this.props;
     if (prevProps.selectedContactId === selectedContactId) return;
     if (selectedContactId === null) {
       this.resetForm();
       return;
     }
-    if (userContact) {
-      this.setState({ ...userContact });
+    if (selectedUser) {
+      this.setState({ ...selectedUser });
     }
   }
 
@@ -44,7 +44,7 @@ class RedactionContact extends Component {
 
   render() {
     const { firstName, lastName, email, phone } = this.state;
-    const { selectedContactId } = this.props;
+    const { selectedContactId, deleteContact, saveContact } = this.props;
 
     return (
       <>
@@ -81,16 +81,13 @@ class RedactionContact extends Component {
             onClearInput={this.clearSelectInput}
           />
 
-          <button
-            type="button"
-            onClick={() => this.props.saveContact(this.state)}
-          >
+          <button type="button" onClick={() => saveContact(this.state)}>
             Save
           </button>
-          {this.props.selectedContactId !== null && (
+          {selectedContactId !== null && (
             <button
               type="button"
-              onClick={() => this.props.deleteContact(selectedContactId)}
+              onClick={() => deleteContact(selectedContactId)}
             >
               Delete
             </button>

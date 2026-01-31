@@ -1,52 +1,67 @@
 import { Component } from "react";
 import { nanoid } from "nanoid";
 import styles from "./App.module.css";
-import AllContactList from "../components/AllContact/AllContactList";
-import RedactionContact from "../components/RedactionContact/RedactionContact";
-const userData = [
-  { id: 1, firstName: "fN1", lastName: "lN1", email: "1@1", phone: "111" },
-  { id: 2, firstName: "fN2", lastName: "lN2", email: "2@2", phone: "222" },
-  { id: 3, firstName: "fN3", lastName: "lN3", email: "3@3", phone: "333" },
-];
+import AllContactList from "./components/AllContact/AllContactList";
+import RedactionContact from "./components/RedactionContact/RedactionContact";
+
 class App extends Component {
   state = {
-    userContact: userData,
+    userContact: [],
     selectedContactId: null,
   };
-
-  selectedContact = (id) => {
+  getFromLocalStor() {
+    const userData = JSON.parse(localStorage.getItem("userContact"));
+    if (userData) {
+      this.setState({ userContact: userData });
+    }
+  }
+  componentDidMount() {
+    this.getFromLocalStor();
+  }
+  selectContactById = (id) => {
     this.setState({ selectedContactId: id });
   };
 
-  startAddContact = () => {
+  clearSelectedContact = () => {
     this.setState({ selectedContactId: null });
   };
-  
+
+  saveToLocalStor = () => {
+    localStorage.setItem("userContact", JSON.stringify(this.state.userContact));
+  };
 
   saveContact = (contact) => {
     if (!contact.id) {
       const newContact = { ...contact, id: nanoid() };
-      this.setState((prev) => ({
-        userContact: [...prev.userContact, newContact],
-        selectedContactId: null,
-      }));
-    
+      this.setState(
+        (prev) => ({
+          userContact: [...prev.userContact, newContact],
+          selectedContactId: newContact.id,
+        }),
+        this.saveToLocalStor,
+      );
     } else {
-      this.setState((prev) => ({
-        userContact: prev.userContact.map((u) =>
-          u.id === contact.id ? contact : u,
-        ),
-        selectedContactId: null,
-      }));
+      console.log("saveOld")
+      this.setState(
+        (prev) => ({
+          userContact: prev.userContact.map((u) =>
+            u.id === contact.id ? contact : u,
+          ),
+        }),
+        this.saveToLocalStor,
+      );
     }
   };
 
   deleteContact = (id) => {
-    this.setState((prev) => ({
-      userContact: prev.userContact.filter((u) => u.id !== id),
-      selectedContactId:
-        prev.selectedContactId === id ? null : prev.selectedContactId,
-    }));
+    this.setState(
+      (prev) => ({
+        userContact: prev.userContact.filter((u) => u.id !== id),
+        selectedContactId:
+          prev.selectedContactId === id ? null : prev.selectedContactId,
+      }),
+      this.saveToLocalStor,
+    );
   };
 
   render() {
@@ -60,12 +75,13 @@ class App extends Component {
         <div className={styles["list-and-redaction-div"]}>
           <AllContactList
             userContact={userContact}
-            selectedContact={this.selectedContact}
-            startAddContact={this.startAddContact}
+            selectContactById={this.selectContactById}
+            clearSelectedContact={this.clearSelectedContact}
             deleteContact={this.deleteContact}
           />
           <RedactionContact
-            userContact={selectedUser}
+            selectedUser={selectedUser}
+            userContact={userContact}
             saveContact={this.saveContact}
             selectedContactId={this.state.selectedContactId}
             deleteContact={this.deleteContact}

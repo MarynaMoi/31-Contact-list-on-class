@@ -1,0 +1,17 @@
+.inputWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  border: 2px solid rgb(108, 226, 195);
+  margin: 10px 0;
+  padding: 0;
+}
+
+.inputWrapper :focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.clearX:hover {
+  opacity: 1;
+}

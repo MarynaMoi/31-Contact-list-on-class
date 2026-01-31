@@ -3,10 +3,10 @@ import styles from "./UserContact.module.css";
 class UserContact extends Component {
   render() {
     const { id, lastName, firstName } = this.props.userContact;
-    const { selectedContact, deleteContact } = this.props;
+    const { selectContactById, deleteContact } = this.props;
     return (
       <div className={styles["user-contact"]}>
-        <div onClick={() => selectedContact(id)}>
+        <div onClick={() => selectContactById(id)}>
           {firstName} {lastName}
           <span
             className={styles.deleteX}
