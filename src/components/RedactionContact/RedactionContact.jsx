@@ -45,8 +45,9 @@ class RedactionContact extends Component {
   render() {
     const { firstName, lastName, email, phone } = this.state;
     const { selectedContactId, deleteContact, saveContact } = this.props;
-
     return (
+     
+
       <>
         <form className={styles["redaction-contact-div"]}>
           <RedactionProp
@@ -80,18 +81,19 @@ class RedactionContact extends Component {
             handleChange={this.handleChange}
             onClearInput={this.clearSelectInput}
           />
-
-          <button type="button" onClick={() => saveContact(this.state)}>
-            Save
-          </button>
-          {selectedContactId !== null && (
-            <button
-              type="button"
-              onClick={() => deleteContact(selectedContactId)}
-            >
-              Delete
+          <div className={styles["divSaveAndDelete"]}>
+            <button type="button" onClick={() => saveContact(this.state)}>
+              Save
             </button>
-          )}
+            {selectedContactId !== null && (
+              <button
+                type="button"
+                onClick={() => deleteContact(selectedContactId)}
+              >
+                Delete
+              </button>
+            )}
+          </div>
         </form>
       </>
     );

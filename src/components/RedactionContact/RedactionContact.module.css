@@ -1,3 +1,9 @@
+.divSaveAndDelete {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}  
+
 .redaction-contact-div {
   border: 2px solid rgb(198, 27, 27);
   flex: 1;
