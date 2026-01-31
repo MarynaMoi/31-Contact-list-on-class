@@ -6,7 +6,7 @@ class UserContact extends Component {
     const { selectContactById, deleteContact } = this.props;
     return (
       <div className={styles["user-contact"]}>
-        <div onClick={() => selectContactById(id)}>
+        <div onDoubleClick={() => selectContactById(id)}>
           {firstName} {lastName}
           <span
             className={styles.deleteX}
