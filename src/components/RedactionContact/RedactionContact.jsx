@@ -3,57 +3,55 @@ import RedactionProp from "../RedactionProp/RedactionProp";
 import styles from "./RedactionContact.module.css";
 
 class RedactionContact extends Component {
-  state = {
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    id: null,
-  };
+  state = { selectedContact: this.props.selectedContact };
 
-  componentDidUpdate(prevProps) {
-    const { selectedContactId, selectedUser } = this.props;
-    if (prevProps.selectedContactId === selectedContactId) return;
-    if (selectedContactId === null) {
-      this.resetForm();
-      return;
+  static getDerivedStateFromProps(props, state) {
+    console.log(props.selectedContact.id, state.selectedContact.id);
+
+    if (props.selectedContact.id !== state.selectedContact.id) {
+      return {
+        selectedContact: props.selectedContact,
+      };
     }
-    if (selectedUser) {
-      this.setState({ ...selectedUser });
-    }
+
+    return null;
   }
-
-  resetForm = () => {
-    this.setState({
-      firstName: "",
-      lastName: "",
-      email: "",
-      phone: "",
-      id: null,
-    });
-  };
 
   handleChange = (ev) => {
     const { name, value } = ev.target;
-    this.setState({ [name]: value });
+
+    this.setState((prevState) => ({
+      selectedContact: {
+        ...prevState.selectedContact,
+        [name]: value,
+      },
+    }));
   };
 
   clearSelectInput = (fieldName) => {
-    this.setState({ [fieldName]: "" });
+    this.setState((prevState) => ({
+      selectedContact: {
+        ...prevState.selectedContact,
+        [fieldName]: "",
+      },
+    }));
+  };
+
+  onSaveContact = () => {
+    this.props.saveContact(this.state.selectedContact);
+  };
+  onDeleteContact = () => {
+    this.props.deleteContact(this.state.selectedContact.id);
   };
 
   render() {
-    const { firstName, lastName, email, phone } = this.state;
-    const { selectedContactId, deleteContact, saveContact } = this.props;
     return (
-     
-
       <>
         <form className={styles["redaction-contact-div"]}>
           <RedactionProp
             name="firstName"
             placeholder="First Name"
-            value={firstName}
+            value={this.state.selectedContact.firstName}
             handleChange={this.handleChange}
             onClearInput={this.clearSelectInput}
           />
@@ -61,7 +59,7 @@ class RedactionContact extends Component {
           <RedactionProp
             name="lastName"
             placeholder="Last Name"
-            value={lastName}
+            value={this.state.selectedContact.lastName}
             handleChange={this.handleChange}
             onClearInput={this.clearSelectInput}
           />
@@ -69,7 +67,7 @@ class RedactionContact extends Component {
           <RedactionProp
             name="email"
             placeholder="Email"
-            value={email}
+            value={this.state.selectedContact.email}
             handleChange={this.handleChange}
             onClearInput={this.clearSelectInput}
           />
@@ -77,19 +75,16 @@ class RedactionContact extends Component {
           <RedactionProp
             name="phone"
             placeholder="Phone"
-            value={phone}
+            value={this.state.selectedContact.phone}
             handleChange={this.handleChange}
             onClearInput={this.clearSelectInput}
           />
           <div className={styles["divSaveAndDelete"]}>
-            <button type="button" onClick={() => saveContact(this.state)}>
+            <button type="button" onClick={this.onSaveContact}>
               Save
             </button>
-            {selectedContactId !== null && (
-              <button
-                type="button"
-                onClick={() => deleteContact(selectedContactId)}
-              >
+            {this.props.selectedContact.id !== null && (
+              <button type="button" onClick={this.onDeleteContact}>
                 Delete
               </button>
             )}
