@@ -1,47 +1,60 @@
 import { Component } from "react";
 import RedactionProp from "../RedactionProp/RedactionProp";
-import styles from "./RedactionContact.module.css";
+import styles from "./ContactForm.module.css";
 
-class RedactionContact extends Component {
-  state = { selectedContact: this.props.selectedContact };
+class ContactForm extends Component {
+  state = {
+    contact: this.props.contact,
+  };
 
   static getDerivedStateFromProps(props, state) {
-    console.log(props.selectedContact.id, state.selectedContact.id);
-
-    if (props.selectedContact.id !== state.selectedContact.id) {
+    if (props.contact.id !== state.contact.id) {
       return {
-        selectedContact: props.selectedContact,
+        contact: props.contact,
       };
     }
-
     return null;
   }
 
   handleChange = (ev) => {
     const { name, value } = ev.target;
 
-    this.setState((prevState) => ({
-      selectedContact: {
-        ...prevState.selectedContact,
+    this.setState((prev) => ({
+      contact: {
+        ...prev.contact,
         [name]: value,
       },
     }));
   };
 
   clearSelectInput = (fieldName) => {
-    this.setState((prevState) => ({
-      selectedContact: {
-        ...prevState.selectedContact,
+    this.setState((prev) => ({
+      contact: {
+        ...prev.contact,
         [fieldName]: "",
       },
     }));
   };
 
-  onSaveContact = () => {
-    this.props.saveContact(this.state.selectedContact);
+  onSaveContact = (ev) => {
+    ev.preventDefault();
+    this.props.saveContact(this.state.contact);
+
+    if (!this.state.contact.id) {
+      this.setState({
+        contact: this.props.createNewContact(),
+      });
+    } else {
+      this.setState({
+        contact: this.state.contact,
+      });
+    }
   };
-  onDeleteContact = () => {
-    this.props.deleteContact(this.state.selectedContact.id);
+
+  onDeleteContact = (ev) => {
+    ev.preventDefault();
+
+    this.props.deleteContact(this.state.contact.id);
   };
 
   render() {
@@ -51,7 +64,7 @@ class RedactionContact extends Component {
           <RedactionProp
             name="firstName"
             placeholder="First Name"
-            value={this.state.selectedContact.firstName}
+            value={this.state.contact.firstName}
             handleChange={this.handleChange}
             onClearInput={this.clearSelectInput}
           />
@@ -59,7 +72,7 @@ class RedactionContact extends Component {
           <RedactionProp
             name="lastName"
             placeholder="Last Name"
-            value={this.state.selectedContact.lastName}
+            value={this.state.contact.lastName}
             handleChange={this.handleChange}
             onClearInput={this.clearSelectInput}
           />
@@ -67,7 +80,7 @@ class RedactionContact extends Component {
           <RedactionProp
             name="email"
             placeholder="Email"
-            value={this.state.selectedContact.email}
+            value={this.state.contact.email}
             handleChange={this.handleChange}
             onClearInput={this.clearSelectInput}
           />
@@ -75,18 +88,14 @@ class RedactionContact extends Component {
           <RedactionProp
             name="phone"
             placeholder="Phone"
-            value={this.state.selectedContact.phone}
+            value={this.state.contact.phone}
             handleChange={this.handleChange}
             onClearInput={this.clearSelectInput}
           />
           <div className={styles["divSaveAndDelete"]}>
-            <button type="button" onClick={this.onSaveContact}>
-              Save
-            </button>
-            {this.props.selectedContact.id !== null && (
-              <button type="button" onClick={this.onDeleteContact}>
-                Delete
-              </button>
+            <button onClick={this.onSaveContact}>Save</button>
+            {this.props.contact.id !== null && (
+              <button onClick={this.onDeleteContact}>Delete</button>
             )}
           </div>
         </form>
@@ -95,4 +104,4 @@ class RedactionContact extends Component {
   }
 }
 
-export default RedactionContact;
+export default ContactForm;

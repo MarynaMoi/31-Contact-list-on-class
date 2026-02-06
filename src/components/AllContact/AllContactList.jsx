@@ -3,19 +3,20 @@ import styles from "./AllContactList.module.css";
 import UserContact from "../UserContact/UserContact";
 class AllContactList extends Component {
   render() {
-    const { userContact, addNewContact, deleteContact, selectContact} = this.props;
-    console.log(userContact)
     return (
       <div className={styles["all-contact-div"]}>
-        {userContact.map((u) => (
+        {this.props.userContacts.map((item) => (
           <UserContact
-            key={u.id}
-            userContact={u}
-            selectContact={selectContact}
-            deleteContact={deleteContact}
+            key={item.id}
+            contact={item}
+            selectContact={this.props.selectContact}
+            deleteContact={this.props.deleteContact}
           />
         ))}
-        <button className={styles["add-contact-btn"]} onClick={addNewContact}>
+        <button
+          className={styles["add-contact-btn"]}
+          onClick={this.props.addNewContact}
+        >
           New
         </button>
       </div>
