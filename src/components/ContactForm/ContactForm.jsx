@@ -1,6 +1,6 @@
+import { useState, useEffect } from 'react';
 import ContactFormInput from '../ContactFormInput/ContactFormInput';
 import styles from './ContactForm.module.css';
-import { useState, useEffect } from 'react';
 
 function ContactForm ({
   saveContact,

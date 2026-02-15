@@ -1,8 +1,9 @@
+import { useState, useEffect } from 'react';
 import { nanoid } from 'nanoid';
-import styles from './App.module.css';
 import AllContactList from './components/AllContact/AllContactList';
 import ContactForm from './components/ContactForm/ContactForm';
-import { useState, useEffect } from 'react';
+import api from './api/contact-service';
+import styles from './App.module.css';
 
 function App () {
   const createNewContact = () => {
@@ -18,11 +19,16 @@ function App () {
   const [userContacts, setUserContacts] = useState([]);
   const [contact, setContact] = useState(createNewContact());
 
-  const getFromLocalStor = () => {
-    const userData = JSON.parse(localStorage.getItem('userContacts'));
-    setUserContacts(userData || []);
-  };
-  useEffect(getFromLocalStor, []);
+  useEffect(() => {
+    api
+      .get('/')
+      .then(({ data }) => {
+        setUserContacts(data || []);
+      })
+      .catch(error => {
+        console.error('Error fetching contacts:', error);
+      });
+  }, []);
 
   const saveToLocalStor = user => {
     localStorage.setItem('userContacts', JSON.stringify(user));
@@ -39,26 +45,35 @@ function App () {
   const saveContact = formContact => {
     if (!formContact.id) {
       formContact.id = nanoid();
-      const updatedUserContacts = [...userContacts, formContact];
-      setUserContacts(updatedUserContacts);
-      setContact(createNewContact());
-      saveToLocalStor(updatedUserContacts);
+      api
+        .post('/', formContact)
+        .then(({ data }) => {
+          const updatedUserContacts = [...userContacts, data];
+          setUserContacts(updatedUserContacts);
+          setContact(createNewContact());
+        })
+        .catch(error => console.log('Error creating contact:', error));
     } else {
-      const updatedUserContacts = userContacts.map(item =>
-        item.id === formContact.id ? formContact : item
-      );
-      setUserContacts(updatedUserContacts);
-
-      saveToLocalStor(updatedUserContacts);
+      api
+        .put(`/${formContact.id}`, formContact)
+        .then(({ data }) => {
+          const updatedUserContacts = userContacts.map(item =>
+            item.id === formContact.id ? data : item
+          );
+          setUserContacts(updatedUserContacts);
+        })
+        .catch(error => console.log('Error updating contact:', error));
     }
   };
 
   const deleteContact = id => {
+    api
+      .delete(`/${id}`)
+      .then(({ status }) => console.log(status))
+      .catch(error => console.log('Error deleting contact:', error));
     const user = userContacts.filter(item => item.id !== id);
     setUserContacts(user);
     setContact(createNewContact());
-
-    saveToLocalStor(user);
   };
 
   return (
