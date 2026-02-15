@@ -30,9 +30,6 @@ function App () {
       });
   }, []);
 
-  const saveToLocalStor = user => {
-    localStorage.setItem('userContacts', JSON.stringify(user));
-  };
 
   const selectContact = contact => {
     setContact(contact);
