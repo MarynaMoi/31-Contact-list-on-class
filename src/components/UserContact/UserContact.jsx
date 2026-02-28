@@ -1,13 +1,16 @@
 import { useDispatch } from 'react-redux';
-import {  selectContact} from './../../store/actions/contactActions';
+import { selectContact } from './../../store/actions/contactActions';
+import { useDeleteContact } from '../../hooks';
+
 import styles from './UserContact.module.css';
 
-function UserContact ({ contact , deleteContact}) {
+function UserContact ({ contact }) {
   const dispatch = useDispatch();
 
-  const onDeleteContact = ev => {
+  const onDeleteContact = useDeleteContact();
+  const handleDelete = ev => {
     ev.stopPropagation();
-    deleteContact(contact.id);
+    onDeleteContact(contact.id);
   };
 
   const onSelectContact = ev => {
@@ -19,7 +22,7 @@ function UserContact ({ contact , deleteContact}) {
     <div className={styles['user-contact']}>
       <div onDoubleClick={onSelectContact}>
         {contact.firstName} {contact.lastName}
-        <span className={styles.deleteX} onClick={onDeleteContact}>
+        <span className={styles.deleteX} onClick={handleDelete}>
           X
         </span>
       </div>

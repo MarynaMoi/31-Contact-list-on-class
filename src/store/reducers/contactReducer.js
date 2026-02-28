@@ -1,9 +1,6 @@
-import { contactsState, createNewContact } from '../../model/initialState';
+import { initialState, createNewContact } from '../../model/initialState';
 import ACTION_TYPES from './../actions/actionTypes';
-const initialState = {
-  contactsUser: contactsState,
-  contact: createNewContact(),
-};
+
 export default function contactReducer (
   state = initialState,
   { type, payload }
@@ -12,34 +9,39 @@ export default function contactReducer (
     case ACTION_TYPES.ADD_CONTACT:
       return {
         ...state,
-        contactsUser: [...state.contactsUser, payload],
-      }; 
+        contacts: [...state.contacts, payload],
+      };
+
 
     case ACTION_TYPES.UPDATE_CONTACT:
       return {
         ...state,
-        contactsUser: state.contactsUser.map(item =>
+        contacts: state.contacts.map(item =>
           item.id === payload.id ? payload : item
         ),
       };
 
-    case ACTION_TYPES.UPDATE_CONTACTS:
+
+
+    case ACTION_TYPES.GET_CONTACTS:
       return {
         ...state,
-        contactsUser: payload,
+        contacts: payload,
       };
 
     case ACTION_TYPES.DELETE_CONTACT:
       return {
         ...state,
-        contactsUser: state.contactsUser.filter(item => item.id !== payload),
+        contacts: state.contacts.filter(item => item.id !== payload),
       };
 
-    case ACTION_TYPES.SELECT_CONTACT:
-      return { ...state, contact: payload };
+
+    case ACTION_TYPES.SELECT_CONTACT: 
+      return { ...state, contactItem: payload };
+
 
     case ACTION_TYPES.ADD_NEW_CONTACT:
-      return { ...state, contact: payload };
+      return { ...state, contactItem: createNewContact() };
 
     default:
       return state;

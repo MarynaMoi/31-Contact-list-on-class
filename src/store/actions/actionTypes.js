@@ -1,6 +1,6 @@
 const ACTION_TYPES = {
   ADD_CONTACT: 'addContact',
-  UPDATE_CONTACTS: 'updateContacts',
+  GET_CONTACTS: 'getContacts',
   UPDATE_CONTACT: 'updateContact',  
   DELETE_CONTACT: 'deleteContact',
   SELECT_CONTACT: 'selectContact',

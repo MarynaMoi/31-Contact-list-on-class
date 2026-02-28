@@ -1,20 +1,19 @@
 import ACTION_TYPES from './actionTypes';
-import { createNewContact } from '../../model/initialState';
 
 
-export const updateContacts = contacts => ({
-  type: ACTION_TYPES.UPDATE_CONTACTS,
+export const getContacts = contacts => ({
+  type: ACTION_TYPES.GET_CONTACTS,
   payload: contacts,
 });
 
-export const addContact = contact => ({
+export const addContact = contactItem => ({
   type: ACTION_TYPES.ADD_CONTACT,
-  payload: contact,
+  payload: contactItem,
 });
 
-export const updateContact = contact => ({
+export const updateContact = contactItem => ({
   type: ACTION_TYPES.UPDATE_CONTACT,
-  payload: contact,
+  payload: contactItem,
 });
 export const deleteContact = id => {
   return {
@@ -22,18 +21,17 @@ export const deleteContact = id => {
     payload: id,
   };
 };
-export const selectContact = contact => {
+export const selectContact = contactItem => {
   return {
     type: ACTION_TYPES.SELECT_CONTACT,
-    payload: contact,
+    payload: contactItem,
   };
 };
 
 export const addNewContact = () => {
   return {
     type: ACTION_TYPES.ADD_NEW_CONTACT,
-    payload: createNewContact(),
   };
 };
 
-// 
+
