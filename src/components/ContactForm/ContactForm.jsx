@@ -2,18 +2,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
 import { nanoid } from 'nanoid';
 import ContactFormInput from '../ContactFormInput/ContactFormInput';
-// import {
-//   addContact,
-//   addNewContact,
-//   updateContact,
-// } from '../../store/actions/contactActions';
-// import { useDeleteContact } from '../../hooks';
 import {
   deleteContactItemAsync,
   updateContactItemAsync,
   addContactItemAsync,
 } from './../../store/slices/contactSlices';
-import api from '../../api/contact-service';
 import styles from './ContactForm.module.css';
 
 function ContactForm () {
