@@ -2,18 +2,23 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
 import { nanoid } from 'nanoid';
 import ContactFormInput from '../ContactFormInput/ContactFormInput';
+// import {
+//   addContact,
+//   addNewContact,
+//   updateContact,
+// } from '../../store/actions/contactActions';
+// import { useDeleteContact } from '../../hooks';
 import {
-  addContact,
-  addNewContact,
-  updateContact,
-} from '../../store/actions/contactActions';
-import { useDeleteContact } from '../../hooks';
+  deleteContactItemAsync,
+  updateContactItemAsync,
+  addContactItemAsync,
+} from './../../store/slices/contactSlices';
 import api from '../../api/contact-service';
 import styles from './ContactForm.module.css';
 
 function ContactForm () {
   const dispatch = useDispatch();
-  const contactItem = useSelector(state => state.contactItem);
+  const contactItem = useSelector(state => state.contactSlice.contactItem);
   const [contact, setContact] = useState(contactItem);
 
   useEffect(() => {
@@ -37,34 +42,18 @@ function ContactForm () {
 
   const onSaveContact = ev => {
     ev.preventDefault();
-
     if (!contact.id) {
       const newContact = { ...contact, id: nanoid() };
-
-      api
-        .post('/', newContact)
-        .then(response => {
-          dispatch(addContact(response.data));
-          dispatch(addNewContact());
-        })
-        .catch(error => {
-          console.error('Error creating contact:', error);
-        });
+      dispatch(addContactItemAsync(newContact));
     } else {
-      api
-        .put(`/${contact.id}`, contact)
-        .then(response => {
-          dispatch(updateContact(response.data));
-        })
-        .catch(error => {
-          console.error('Error updating contact:', error);
-        });
+      dispatch(updateContactItemAsync(contact));
     }
   };
-  const onDeleteContact = useDeleteContact();
+
   const handleDelete = ev => {
     ev.preventDefault();
-    onDeleteContact(contact.id);
+    console.log(contact.id)
+    dispatch(deleteContactItemAsync(contact.id));
   };
 
   return (

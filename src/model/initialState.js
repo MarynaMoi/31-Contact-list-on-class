@@ -1,4 +1,5 @@
-
+export const contactsState = [];
+export const CONTACT_SLICE_NAME = 'contacts';
 export const createNewContact = () => {
   return {
     firstName: '',
@@ -7,9 +8,4 @@ export const createNewContact = () => {
     phone: '',
     id: null,
   };
-};
-
-export const initialState = {
-  contacts: [],
-  contactItem: createNewContact(),
 };

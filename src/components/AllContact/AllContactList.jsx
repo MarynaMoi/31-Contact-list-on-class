@@ -2,27 +2,15 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 
 import UserContact from '../UserContact/UserContact';
-import api from '../../api/contact-service';
-import { addNewContact, getContacts, } from './../../store/actions/contactActions';
+import {getContactsAsync,addNewContact} from './../../store/slices/contactSlices'
+
 import styles from './AllContactList.module.css';
 
 function AllContactList () {
   const dispatch = useDispatch();
-  const userContacts = useSelector(state => state.contacts);
+  const userContacts = useSelector(state => state.contactSlice.contacts);
 
-
-  useEffect(() => {
-    api
-      .get('/')
-      .then(({ data }) => {
-        dispatch(getContacts(data || []));
-      })
-      .catch(error => {
-        console.error('Error fetching contacts:', error);
-      });
-  }, [dispatch]);
-
-
+  useEffect(() => {dispatch(getContactsAsync())},[dispatch])
 
   return (
     <div className={styles['all-contact-div']}>

@@ -1,16 +1,15 @@
 import { useDispatch } from 'react-redux';
-import { selectContact } from './../../store/actions/contactActions';
-import { useDeleteContact } from '../../hooks';
+import {deleteContactItemAsync,selectContact} from '../../store/slices/contactSlices'
 
 import styles from './UserContact.module.css';
 
 function UserContact ({ contact }) {
   const dispatch = useDispatch();
 
-  const onDeleteContact = useDeleteContact();
+
   const handleDelete = ev => {
     ev.stopPropagation();
-    onDeleteContact(contact.id);
+   dispatch(deleteContactItemAsync(contact.id));
   };
 
   const onSelectContact = ev => {
