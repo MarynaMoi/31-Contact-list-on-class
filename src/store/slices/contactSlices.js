@@ -31,7 +31,7 @@ export const getContactsAsync = createAsyncThunk(
         throw new Error('Error fetching contacts:');
       }
       const { data } = response;
-      // dispatch(getContacts(data));
+      dispatch(getContacts(data));
       return data;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -100,9 +100,9 @@ const contactSlice = createSlice({
         item.id === payload.id ? payload : item
       );
     },
-    // getContacts (state, { payload }) {
-    //   state.contacts = payload;
-    // },
+    getContacts (state, { payload }) {
+      state.contacts = payload;
+    },
     removeContact (state, { payload }) {
       state.contacts = state.contacts.filter(item => item.id !== payload);
     },
@@ -114,11 +114,6 @@ const contactSlice = createSlice({
     },
   },
   extraReducers: builder => {
-    builder.addCase(getContactsAsync.fulfilled, (state, action) => {
-      //цей getContactsAsync.fulfilled замість reducer:{getContacts} та dispatch(getContacts(data));
-      state.contacts = action.payload;
-      (state.isFetching = false), (state.error = null);
-    });
     builder.addCase(getContactsAsync.rejected, setError);
     builder.addCase(getContactsAsync.pending, setFetching);
     builder.addCase(deleteContactItemAsync.rejected, setError);
