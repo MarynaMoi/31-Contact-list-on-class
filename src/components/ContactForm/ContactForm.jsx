@@ -3,24 +3,20 @@ import { nanoid } from 'nanoid';
 import * as yup from 'yup';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { Button, TextField, Box } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import {
   deleteContactItemAsync,
   updateContactItemAsync,
   addContactItemAsync,
-  selectContact,
 } from './../../store/slices/contactSlices';
-import { createNewContact } from '../../model/initialState';
 import styles from './ContactForm.module.css';
 
 const schema = yup.object().shape({
-  email: yup
-    .string()
-    .email('Невірний формат email')
-    .required('Введіть Email'),
+  email: yup.string().email('Invalid email').required('Email required'),
   phone: yup
     .string()
-    .min(10, 'Номер телефону має містити мінімум 10 символів')
-    .required('Введіть номер телефону'),
+    .matches(/^\+380\d{9}$/, 'Phone must be in format +380XXXXXXXXX')
+    .required('Phone required'),
 });
 
 function ContactForm () {
@@ -42,68 +38,74 @@ function ContactForm () {
     dispatch(deleteContactItemAsync(contactItem.id));
   };
 
-  const renderForm = ({ values, setFieldValue, isValid, dirty }) => {
+  const renderInput = (
+    name,
+    placeholder,
+    values,
+    setFieldValue,
+    errors = {},
+    touched = {}
+  ) => (
+    <Box position='relative'>
+      <Field
+        as={TextField}
+        name={name}
+        placeholder={placeholder}
+        variant='outlined'
+        size='small'
+        sx={{
+          '& legend': { display: 'none' },
+          '& fieldset': { top: 0 },
+          '& .MuiOutlinedInput-input': {
+            padding: '6px 28px 6px 8px',
+            fontSize: '14px',
+          },
+          '& .MuiFormHelperText-root': { padding: 0 },
+        }}
+        error={touched[name] && Boolean(errors[name])}
+        helperText={touched[name] && errors[name]}
+      />
+
+      {values[name] && (
+        <Box
+          onClick={() => setFieldValue(name, '')}
+          sx={{
+            cursor: 'pointer',
+            position: 'absolute',
+            right: 4,
+            top: 6,
+            zIndex: 10,
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
+          <CloseIcon
+            fontSize='small'
+            sx={{
+              color: 'gray',
+              width: 18,
+              height: 18,
+              boxSizing: 'content-box',
+            }}
+          />
+        </Box>
+      )}
+    </Box>
+  );
+
+  const renderForm = ({ values, setFieldValue, isValid, touched, errors }) => {
     return (
       <Form className={styles['redaction-contact-div']}>
-        <Box position='relative'>
-          <Field
-            as={TextField}
-            name='firstName'
-            placeholder='First Name'
-            size='small'
-          />
-          {values.firstName && (
-            <span
-              className={styles.clearX}
-              onClick={() => setFieldValue('firstName', '')}
-            >
-              ✕
-            </span>
-          )}
-        </Box>
-        <Box position='relative'>
-          <Field name='lastName' placeholder='Last Name' />
-          {values.lastName && (
-            <span
-              className={styles.clearX}
-              onClick={() => setFieldValue('lastName', '')}
-            >
-              ✕
-            </span>
-          )}
-        </Box>
-        <Box position='relative'>
-          <Field name='email' placeholder='Email' />
-          {values.email && (
-            <span
-              className={styles.clearX}
-              onClick={() => setFieldValue('email', '')}
-            >
-              ✕
-            </span>
-          )}
-          <ErrorMessage name='email' component='div' />
-        </Box>
-        <Box position='relative'>
-          <Field name='phone' placeholder='Phone' />
-          {values.phone && (
-            <span
-              className={styles.clearX}
-              onClick={() => setFieldValue('phone', '')}
-            >
-              ✕
-            </span>
-          )}
-          <ErrorMessage name='phone' component='div' className={styles.error} />
-        </Box>
+        {renderInput('firstName', 'First Name', values, setFieldValue)}
+        {renderInput('lastName', 'Last Name', values, setFieldValue)}
+        {renderInput('email', 'Email', values, setFieldValue, errors, touched)}
+        {renderInput('phone', 'Phone', values, setFieldValue, errors, touched)}
+
         <div className={styles['divSaveAndDelete']}>
-          <Button
-            type='submit'
-            variant='contained'
-            disabled={!dirty || !isValid}
-          >
+          <Button type='submit' variant='contained' disabled={!isValid}>
             Save
           </Button>
+
           {contactItem.id !== null && (
             <Button type='button' variant='outlined' onClick={handleDelete}>
               Delete
