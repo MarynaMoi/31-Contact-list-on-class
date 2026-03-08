@@ -51,6 +51,24 @@ function ContactForm () {
         as={TextField}
         name={name}
         placeholder={placeholder}
+        error={touched[name] && Boolean(errors[name])}
+        helperText={touched[name] && errors[name]}
+        onChange={e => {
+          let val = e.target.value;
+          if (name === 'phone') {
+            if (val.startsWith('0')) {
+              val = '+38' + val;
+            }
+            if (val.startsWith('80')) {
+              val = '+3' + val;
+            }
+            if (val.startsWith('380')) {
+              val = '+' + val;
+            }
+            if (val.length > 13) val = val.slice(0, 13);
+            setFieldValue(name, val);
+          }
+        }}
         variant='outlined'
         size='small'
         sx={{
@@ -62,8 +80,6 @@ function ContactForm () {
           },
           '& .MuiFormHelperText-root': { padding: 0 },
         }}
-        error={touched[name] && Boolean(errors[name])}
-        helperText={touched[name] && errors[name]}
       />
 
       {values[name] && (
