@@ -1,32 +1,18 @@
 {
   "contacts": [
     {
-      "firstName": "Іван",
-      "lastName": "Петренко",
-      "email": "ivan.petrenko@example.com",
-      "phone": "+380671234567",
-      "id": "1"
-    },
-    {
       "firstName": "Микола",
       "lastName": "Шевченко",
       "email": "mykola.shevchenko@example.com",
       "phone": "+380931234321",
-      "id": "3"
+      "id": "1"
     },
     {
-      "id": "nRMdi9RKKue7W44vdQ0pt",
-      "firstName": "ff",
-      "lastName": "",
-      "email": "mykola.ff@example.com",
-      "phone": "+380000000000"
-    },
-    {
-      "id": "hM-fVPm1wWpS0wECj9PZR",
-      "firstName": "пап",
-      "lastName": "вававсавав",
-      "email": "mykola.ff@example.com",
-      "phone": "1234567899"
+      "firstName": "Петро",
+      "lastName": "Кононенко",
+      "email": "petro.shevchenko@example.com",
+      "phone": "+380881234321",
+      "id": "2"
     }
   ]
 }

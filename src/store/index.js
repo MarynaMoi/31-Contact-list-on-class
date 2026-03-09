@@ -5,5 +5,5 @@ import logger from 'redux-logger';
 
 export default configureStore({
   reducer: { contactSlice },
-  // middleware: getDefaultMiddleware => getDefaultMiddleware().concat(logger),
+  middleware: getDefaultMiddleware => getDefaultMiddleware().concat(logger),
 });

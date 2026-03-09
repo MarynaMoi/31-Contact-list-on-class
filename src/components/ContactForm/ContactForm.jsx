@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { nanoid } from 'nanoid';
 import * as yup from 'yup';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Formik, Form, Field } from 'formik';
 import { Button, TextField, Box } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import {
@@ -15,6 +15,7 @@ const schema = yup.object().shape({
   email: yup.string().email('Invalid email').required('Email required'),
   phone: yup
     .string()
+    .max(13, 'Maximum length for phone number is 13 characters')
     .matches(/^\+380\d{9}$/, 'Phone must be in format +380XXXXXXXXX')
     .required('Phone required'),
 });
@@ -53,32 +54,14 @@ function ContactForm () {
         placeholder={placeholder}
         error={touched[name] && Boolean(errors[name])}
         helperText={touched[name] && errors[name]}
-        onChange={e => {
-          let val = e.target.value;
-          if (name === 'phone') {
-            if (val.startsWith('0')) {
-              val = '+38' + val;
-            }
-            if (val.startsWith('80')) {
-              val = '+3' + val;
-            }
-            if (val.startsWith('380')) {
-              val = '+' + val;
-            }
-            if (val.length > 13) val = val.slice(0, 13);
-            setFieldValue(name, val);
-          }
-        }}
         variant='outlined'
         size='small'
         sx={{
           '& legend': { display: 'none' },
-          '& fieldset': { top: 0 },
           '& .MuiOutlinedInput-input': {
-            padding: '6px 28px 6px 8px',
             fontSize: '14px',
+            height: '12px',
           },
-          '& .MuiFormHelperText-root': { padding: 0 },
         }}
       />
 
@@ -102,6 +85,7 @@ function ContactForm () {
               width: 18,
               height: 18,
               boxSizing: 'content-box',
+              backgroundColor: '#ffffff'
             }}
           />
         </Box>
